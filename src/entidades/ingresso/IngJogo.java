@@ -9,7 +9,7 @@ public class IngJogo extends Ingresso {
         super(evento, tipo);
         this.percentualDescontoTorcedor = percentual;
     }
-
+    
     @Override
     public double getPreco() {
         return super.getPreco() * this.percentualDescontoTorcedor / 100;

@@ -1,3 +1,5 @@
+package app;
+
 import cli.Cli;
 
 public class App {
