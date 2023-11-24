@@ -1,0 +1,8 @@
++--Lista de Eventos--+
+ Nome do evento : Firmeza
+ Data do evento: 01/02/2020
+ Local do evento: CasaZe
+ Esporte : futbol 
+ Equipe da casa: cruzeiro x Equipe adversaria : flamengo
+---------------------------------
++--Fim da Lista de Eventos--+

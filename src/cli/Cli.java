@@ -31,10 +31,10 @@ public class Cli {
             opcao = leitor.nextInt();
             switch (opcao) {
                 case 1:
-                    cadastrarEvento();
+                    cadastroDeEvento();
                     break;
                 case 2:
-                    exibirEvento();
+                    listarEventos();
                     break;
                 case 3:
                     exibirIngressosRestantes();
@@ -43,42 +43,50 @@ public class Cli {
                     buscarEventoPorNome();
                     break;
                 case 5:
-                    removerEventoPorNome();
+                    removerEvento();
                     break;
                 case 6:
                     atualizarEventoPorNome();
                     break;
-                case 11:
-                    venderIngresso();
+                case 7:
+                    comprarIngresso();
                     break;
+                case 0:
+                    salvarEventosParaArquivo();
+                    System.out.println("Programa encerrado.");
+                    return opcao;
                 default:
-                    gravarArqTxt();
-                    leitor.close();
-                    return 0;
+                    break;
             }
         }
     }
 
     private static void menu() {
         System.out.println("\nDigite a opção desejada ou qualquer outro valor para sair:");
-        System.out.println("1 - Cadastrar um novo evento;");
-        System.out.println("2 - Exibir todos os eventos cadastrados;");
-        System.out.println("3 - Exibir ingressos restantes;");
+        System.out.println("1 - Criar um novo evento;");
+        System.out.println("2 - Listar todos os eventos;");
+        System.out.println("3 - Exibir quantidade ingressos restantes;");
         System.out.println("4 - Buscar evento pelo nome;");
-        System.out.println("5 - Excluir um evento;");
-        System.out.println("6 - Alterar um evento (Somente data e local);");
-        System.out.println("11 - Vender um ingresso;");
+        System.out.println("5 - Excluir um evento pelo nome;");
+        System.out.println("6 - Alterar dados de um evento;");
+        System.out.println("7 - Comprar ingressos;");
+        System.out.println("0 - Encerrar programa;");
     }
 
-    public static void cadastrarEvento() throws IOException {
-        evento = eventoDao.cadastrarEvento(leitor);
+    public static void cadastroDeEvento() throws IOException {
+        evento = eventoDao.cadastroDeEvento(leitor);
         if (evento != null) {
             System.out.println("Evento cadastrado com sucesso!");
         }
     }
 
-    public static void exibirEvento() {
-        eventoDao.exibirEvento(evento);
+    public static void salvarEventosParaArquivo() {
+        List<Evento> eventos = eventoDao.listarEvt();
+        eventoDao.salvarEventosParaArquivo(eventos);
+    }
+
+    public static void listarEventos() {
+        eventoDao.listarEventos(evento);
     }
 
     public static void exibirIngressosRestantes() {
@@ -89,20 +97,16 @@ public class Cli {
         eventoDao.buscarEventoPorNome(leitor, 0);
     }
 
-    public static void removerEventoPorNome() {
-        eventoDao.RemoverEventoPorNome(leitor, 1);
+    public static void removerEvento() {
+        eventoDao.removerEvento(leitor, 1);
     }
 
     public static void atualizarEventoPorNome() {
-        eventoDao.AtualizarEventoPorNome(leitor, 2);
+        eventoDao.atualizarEventoPorNome(leitor, 2);
     }
 
-    public static void venderIngresso() {
-        ingresso = ingressoDao.venderIngresso(evento, leitor, ingresso);
-    }
-
-    public static  void gravarArqTxt() throws IOException {
-        eventoDao.gravarArqTxt();
+    public static void comprarIngresso() {
+        ingresso = ingressoDao.comprarIngresso(evento, leitor, ingresso);
     }
 
 }

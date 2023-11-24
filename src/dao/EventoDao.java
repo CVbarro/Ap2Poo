@@ -6,6 +6,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 
@@ -18,11 +21,6 @@ public class EventoDao {
     private List<Evento> listaEventos = new ArrayList<>();
 
     public void AcaoEventoGeral(Scanner leitor, int buscaEvento) {
-    	//buscaEvento = 0 - Consulta evento - default
-    	//buscaEvento = 1 - Remove evento
-    	//buscaEvento = 2 - Altera evento
-    	//buscaEvento = 3 - Busca tipo ingresso meia/inteira
-
     	LocalDate dataFinal = null;
     	List<Evento> listarTdsEventos = Evento.getListaEventos();
     	if (listarTdsEventos.isEmpty()) {
@@ -92,7 +90,7 @@ public class EventoDao {
 	}
 
 
-    public Evento cadastrarEvento(Scanner leitor) throws IOException {
+    public Evento cadastroDeEvento(Scanner leitor) throws IOException {
         String nome, data, local, tipo;
         LocalDate dataFinal = LocalDate.now();
         int ingMeia, ingInteira;
@@ -168,66 +166,50 @@ public class EventoDao {
 	        return exposicao;
         }
     }
-	public void exibirEvento(Evento evento) {
+	public void listarEventos(Evento evento) {
         if (evento == null) {
             System.out.println("Nenhum evento foi cadastrado no momento !");
         } else {
         	listarEvt();
         }
     }
-	public void AtualizarEventoPorNome(Scanner leitor, int buscaEvento) {
-    	//buscaEvento = 0 - Consulta evento - default
-    	//buscaEvento = 1 - Remove evento
-    	//buscaEvento = 2 - Altera evento
-    	//buscaEvento = 3 - Busca tipo ingresso meia/inteira
-
+	public void atualizarEventoPorNome(Scanner leitor, int buscaEvento) {
     	buscaEvento = 2;
     	AcaoEventoGeral(leitor, buscaEvento);
     }
 
 	public void buscarEventoPorNome(Scanner leitor, int buscaEvento) {
-    	//buscaEvento = 0 - Consulta evento - default
-    	//buscaEvento = 1 - Remove evento
-    	//buscaEvento = 2 - Altera evento
-    	//buscaEvento = 3 - Busca tipo ingresso meia/inteira
-
     	AcaoEventoGeral(leitor, buscaEvento);
     }
 
-	public void RemoverEventoPorNome(Scanner leitor, int buscaEvento) {
-    	//buscaEvento = 0 - Consulta evento - default
-    	//buscaEvento = 1 - Remove evento
-    	//buscaEvento = 2 - Altera evento
-    	//buscaEvento = 3 - Busca tipo ingresso meia/inteira
-
+	public void removerEvento(Scanner leitor, int buscaEvento) {
     	buscaEvento = 1;
     	AcaoEventoGeral(leitor, buscaEvento);
     }
+    
+	public void salvarEventosParaArquivo(List<Evento> eventos) {
+		String nomeArquivo = "Eventos.txt";
+		String diretorioProjeto = System.getProperty("user.dir");
 
-	public void gravarArqTxt() throws IOException {
-    	try {
-    		FileWriter arq = new FileWriter("c:\\Projeto_Eventos.txt");
-    		PrintWriter gravarArq = new PrintWriter(arq);
-    		List<Evento> eventos = listarEvt();
+		String caminhoCompleto = diretorioProjeto + File.separator + nomeArquivo;
 
-	   	 	gravarArq.printf("+--Resultado--+%n");
-	   	 		if(eventos.isEmpty()) {
-	   	 			gravarArq.println("Nao existem eventos cadastrados. \n");
-	   	 			System.out.println("Nao existem eventos cadastrados para salvar no txt. \n" +
-	   	 				"Arquivo gerado em c:\\Projeto_Eventos.txt. \n" + "Volte sempre !");
-	   	 		} else {
-	   	 			gravarArq.println(eventos);
-	   	 			System.out.println("\n Os dados dos eventos acima foram gravados com sucesso no caminho c:\\Projeto_Eventos.txt \r\n" +
-	   	 					"Volte sempre !");
-	   	 		}
-	   	 	gravarArq.printf("+----Fim do arquivo---------+%n");
-    	    arq.close();
+		try (PrintWriter gravarArq = new PrintWriter(new BufferedWriter(new FileWriter(caminhoCompleto)))) {
+			gravarArq.println("+--Lista de Eventos--+");
 
-		} catch (Exception e) {
-			System.out.println("Sem permissao de acesso para gravar o arquivo. \n" +
-					"Por favor, execute o programa como administrador do sistema para sanar o problema de acesso.");
+			if (eventos.isEmpty()) {
+				gravarArq.println("Nenhum evento cadastrado.");
+				System.out.println("Nenhum evento cadastrado para salvar no arquivo.");
+			} else {
+				for (Evento evento : eventos) {
+					gravarArq.println(evento.toString());
+					gravarArq.println("---------------------------------");
+				}
+				System.out.println("Os dados dos eventos foram salvos com sucesso no arquivo: " + caminhoCompleto);
+			}
+
+			gravarArq.println("+--Fim da Lista de Eventos--+");
+		} catch (IOException e) {
+			System.out.println("Erro ao salvar os eventos no arquivo: " + e.getMessage());
 		}
-
-    }
-
+	}
 }

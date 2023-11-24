@@ -1,6 +1,7 @@
 package dao;
 
 import entidades.evento.Evento;
+import entidades.evento.Exposicao;
 import entidades.evento.Jogo;
 import entidades.evento.Show;
 
@@ -17,23 +18,21 @@ import java.util.Scanner;
 public class IngressoDao extends EventoDao {
 
     public void exibirIngressosRestantes(Evento evento, Scanner leitor, int buscaEvento) {
-        // buscaEvento = 0 - Consulta evento - default
-        // buscaEvento = 1 - Remove evento
-        // buscaEvento = 2 - Altera evento
-        // buscaEvento = 3 - Busca tipo ingresso meia/inteira
-
-        // Remove this line, and use the value passed as an argument
-        // buscaEvento = 3;
-
         if (evento == null) {
-            System.out.println("Evento ainda não foi cadastrado!");
-        } else {
-            // Use the value passed as an argument
-            AcaoEventoGeral(leitor, buscaEvento);
+            System.out.println("Erro: Evento não encontrado.");
+        } else if (evento instanceof Exposicao) {
+            Exposicao exposicao = (Exposicao) evento;
+            System.out.println("Ingressos Meia Restantes: " + exposicao.getIngressosMeia() + "\n" + "Ingressos Inteira Restantes: " + exposicao.getIngressosInteira());
+        } else if (evento instanceof Jogo) {
+            Jogo jogo = (Jogo) evento;
+            System.out.println("Ingressos Meia Restantes: " + jogo.getIngressosMeia() + "\n" + "Ingressos Inteira Restantes: " + jogo.getIngressosInteira());
+        } else if (evento instanceof Show) {
+            Show show = (Show) evento;
+            System.out.println("Ingressos Meia Restantes: " + show.getIngressosMeia() + "\n" + "Ingressos Inteira Restantes: " + show.getIngressosInteira());
         }
     }
 
-    public Ingresso venderIngresso(Evento evento, Scanner leitor, Ingresso ingresso) {
+    public Ingresso comprarIngresso(Evento evento, Scanner leitor, Ingresso ingresso) {
         String tipo, nomeEventoDigitado;
         TipoIngresso tipoIngresso;
         int quantidade;
